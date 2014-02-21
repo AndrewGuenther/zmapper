@@ -1,6 +1,5 @@
 function setVal(prefix, prop, data) {
    var elem = document.getElementById(prefix + prop);
-   console.log("Setting "+prefix+prop + " to " + data[prop]);
 
    if (elem == null) {
       return;
@@ -11,7 +10,6 @@ function setVal(prefix, prop, data) {
    }
 
    elem.appendChild(document.createTextNode(data[prop]));
-
 }
 
 function setVals(prefix, data) {
@@ -28,6 +26,9 @@ function reqListener() {
    data = JSON.parse(this.responseText);
 
    setVals("", data);
+   if (data) {
+      $("#overall-progress").css("width", data['progress']+"%");
+   }
 }
 
 function getUpdate() {
@@ -57,8 +58,4 @@ $(document).ready(function() {
          $("#start").click();
       }
    });
-
-   $("#progress").change(function(eventObj) {
-      $("#overall-progress").attr('aria-valuenow', $(this).val());
-   })
 });
