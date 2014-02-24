@@ -1,45 +1,32 @@
-<!DOCTYPE html>
-<html>
-   <head>
-      <!-- JQuery -->
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-
-      <!-- Bootstrap -->
-      <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-      <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-      <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-
-      <link href="{{ url_for('static', filename='zmapper.css') }}" rel='stylesheet' type='text/css'>
-      <script src="{{ url_for('static', filename='zmapper.js') }}"></script>
-   </head>
-   <body>
-      <div id="content" class="container">
-         <div class="row">
-            <button id="start" type="button" class="btn btn-success"><span class="glyphicon glyphicon-play"></span> Start</button>
-            <button id="stop" type="button" class="btn btn-danger" disabled="disabled"><span class="glyphicon glyphicon-stop"></span> Stop</button>
-         </div>
-         <div class="row">
-            <div class="col-md-4">
-               <h1><span id="elapsed">0:00</span> elapsed</h1>
-            </div>
-            <div class="col-md-4">
-               <h1><span id="remaining">0h0m</span> remaining</h1>
-            </div>
-            <div class="col-md-4">
-               <h1><span id="progress">0</span>% complete</h1>
-            </div>
-         </div>
-         <div class="row">
-            <div class="col-md-4">
-               <h1><span id="sendcount">0</span> sent</h1>
-            </div>
-            <div class="col-md-4">
-               <h1><span id="recvcount">0</span> received</h1>
-            </div>
-            <div class="col-md-4">
-               <h1><span id="hits">0.00</span>% hit rate</h1>
-            </div>
-         </div>
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div id="content" class="container">
+   <div class="row">
+      <button id="start" type="button" class="btn btn-success"><span class="glyphicon glyphicon-play"></span> Start</button>
+      <button id="stop" type="button" class="btn btn-danger" disabled="disabled"><span class="glyphicon glyphicon-stop"></span> Stop</button>
+   </div>
+   <div class="row">
+      <div class="col-md-4">
+         <h1><span id="elapsed">0:00</span> elapsed</h1>
       </div>
-   </body>
-</html>
+      <div class="col-md-4">
+         <h1><span id="remaining">0h0m</span> remaining</h1>
+      </div>
+      <div class="col-md-4">
+         <h1><span id="progress">0</span>% complete</h1>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-md-4">
+         <h1><span id="sendcount">0</span> sent</h1>
+      </div>
+      <div class="col-md-4">
+         <h1><span id="recvcount">0</span> received</h1>
+      </div>
+      <div class="col-md-4">
+         <h1><span id="hits">0.00</span>% hit rate</h1>
+      </div>
+   </div>
+</div>
+{% endblock %}

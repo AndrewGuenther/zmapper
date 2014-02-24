@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      {% block head %}
+      <title>{% block title %}{% endblock %} - ZMapper</title>
+      <!-- JQuery -->
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+      <!-- Bootstrap -->
+      <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+      <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+      <link href="{{ url_for('static', filename='zmapper.css') }}" rel='stylesheet' type='text/css'>
+      <script src="{{ url_for('static', filename='zmapper.js') }}"></script>
+      {% endblock %}
+   </head>
+   <body>
+      {% block content %}
+      {% endblock %}
+   </body>
+</html>
