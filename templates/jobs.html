@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Jobs{% endblock %}
+{% block head %}
+<script src="{{ url_for('static', filename='rowlink.js') }}"></script>
+{% endblock %}
+{% block content %}
+
+<table id="jobs" class="table table-hover table-striped table-bordered">
+   <thead>
+      <tr>
+         <th>Job ID</th>
+         <th>Elapsed Time</th>
+         <th>Time Remaining</th>
+         <th>Hit Rate</th>
+      </tr>
+   </thead>
+   <tbody data-link="row" class="rowlink">
+   {% for job_id, report in jobs.iteritems() %}
+      <tr>
+         <td id="{{ job_id }}"><a href="/jobs/{{ job_id }}">{{ job_id }}</a></td>
+         <td id="{{ job_id}}elapsed">{{ report['elapsed'] }} </td>
+         <td id="{{ job_id}}remaining">{{ report['remaining'] }}</td>
+         <td id="{{ job_id}}hits">{{ report['hits'] }}</td>
+      </tr>
+   {% endfor %}
+   </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}View Job{% endblock %}
+{% block content %}
+<div class="row">
+   <div class="col-md-4">
+      <h1><span id="elapsed">{{ job["elapsed"] }}</span> elapsed</h1>
+   </div>
+   <div class="col-md-4">
+      <h1><span id="remaining">{{ job["remaining"] }}</span> remaining</h1>
+   </div>
+   <div class="col-md-4">
+      <h1><span id="progress">{{ job["progress"] }}</span>% complete</h1>
+   </div>
+</div>
+<div class="row">
+   <div class="col-md-4">
+      <h1><span id="sendcount">{{ job["send"]["count"] }}</span> sent</h1>
+   </div>
+   <div class="col-md-4">
+      <h1><span id="recvcount">{{ job["recv"]["count"] }}</span> received</h1>
+   </div>
+   <div class="col-md-4">
+      <h1><span id="hits">{{ job["hits"] }}</span>% hit rate</h1>
+   </div>
+</div>
+<div class="row">
+   <button class="btn btn-danger" onClick="$.ajax({url:location.pathname, type: 'DELETE'});location.href='/jobs'">Kill Job</button>
+</div>
+{% endblock %}

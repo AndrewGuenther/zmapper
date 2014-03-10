@@ -1,0 +1,35 @@
+{% macro option_group(name="") %}
+   <h3>{{ name.title() }} Options</h1>
+   {% for argument, (data_type, option_type) in valid_args.iteritems() %}
+   {% if option_type == name %}
+   <div class="form-group">
+      <label for="{{ argument }}" class="control-label">{{ " ".join(argument.split("-")).title() }}</label>
+      <input id="{{ argument }}" name="{{ argument }}" type="text" class="form-control input-xlarge">
+   </div>
+   {% endif %}
+   {% endfor %}
+{% endmacro %}
+<div class="modal fade new-job-modal" tabindex="-1" role="dialog" aria-labelledby="NewJob" aria-hidden="true">
+   <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">New Job</h4>
+         </div>
+         <div class="modal-body">
+            <form role="form" id="new-job" action="/jobs" method="POST">
+               {{ option_group("common") }}
+               {{ option_group("scan") }}
+               {{ option_group("network") }}
+               {{ option_group("probe") }}
+               {{ option_group("output") }}
+               {{ option_group("additional") }}
+            </form>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onClick="$.post('/jobs', $('#new-job').serialize()); location.href='/jobs'">Launch Job</button>
+         </div>
+      </div>
+   </div>
+</div>

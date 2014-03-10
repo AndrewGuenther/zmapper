@@ -1,0 +1,13 @@
+{
+   "allowed_args": [
+      "target-port", "max-targets", "max-results", "max-runtime",
+      "cooldown-time", "seed", "probes", "output-fields", "output-filter"
+   ],
+
+   "enforced_args": {
+      "dryrun": true,
+      "interface": "eth0"
+   },
+
+   "default_config": "config/default.conf"
+}

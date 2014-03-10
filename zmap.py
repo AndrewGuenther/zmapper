@@ -1,23 +1,100 @@
+import json
+import pipes
 import re
 import subprocess
 import sys
 import time
 
-class ZMap(object):
-   OUTFILE_NUM = 0
+with open("config/config.json", "r") as f:
+   global_config = json.load(f)
 
-   def __init__(self, port=80):
-      self.port = port
-      self.outfile = "/tmp/zmap_out-%d" % ZMap.OUTFILE_NUM
-      self.errfile = "/tmp/zmap_err-%d" % ZMap.OUTFILE_NUM
+def zmap_gen(config_args={}):
+   clean_args = dict((k, v) for k, v in config_args.iteritems() if k in global_config["allowed_args"])
+   zmap_args = dict(clean_args.items() + global_config["enforced_args"].items())
+   zmap_args["config"] = global_config["default_config"]
+
+   config = ZMapConfig(zmap_args)
+
+   return ZMap(config)
+
+class ZMapConfig(dict):
+   VALID_ARGS = {
+         # Common Options
+         "target-port":    (int, "common"),
+         "output-file":    (str, "common"),
+         "blacklist-file": (str, "common"),
+         # Scan Options
+         "max-targets":    (int, "scan"),
+         "max-results":    (int, "scan"),
+         "max-runtime":    (int, "scan"),
+         "rate":           (int, "scan"),
+         "bandwidth":      (str, "scan"),
+         "cooldown-time":  (int, "scan"),
+         "seed":           (int, "scan"),
+         "sender-threads": (int, "scan"),
+         "probes":         (int, "scan"),
+         "dryrun":         (bool, "scan"),
+         # Network Options
+         "source-port":    (int, "network"),
+         "source-ip":      (int, "network"),
+         "gateway-mac":    (str, "network"),
+         "interface":      (str, "network"),
+         # Probe Options
+         "probe-module":   (str, "probe"),
+         "probe-args":     (str, "probe"),
+         # Output Options
+         "output-module":  (str, "output"),
+         "output-fields":  (str, "output"),
+         "output-filter":  (str, "output"),
+         # Additional Options
+         "config":         (str, "additional")
+   }
+
+   @staticmethod
+   def verify_config(config):
+      for key, value in config.items():
+         if key not in ZMapConfig.VALID_ARGS.keys():
+            return False
+
+      return True
+
+   def __init__(self, user_config={}):
+      if not ZMapConfig.verify_config(user_config):
+         raise Exception
+
+      self.config = user_config
+
+class ZMap(object):
+   JOB_ID = 0
+
+   @staticmethod
+   def get_job_id():
+      ret = ZMap.JOB_ID
+      ZMap.JOB_ID += 1
+      return ret
+
+   def __init__(self, config):
+      if not isinstance(config, ZMapConfig):
+         raise TypeError
+
+      self.job_id = ZMap.get_job_id()
+      self.errfile = "/tmp/zmap-err-%d" % self.job_id
+
+      self.args = []
+      for key, value in config.config.items():
+         if type(value) is not bool:
+            self.args += ['--%s %s' % (pipes.quote(key), pipes.quote(value))]
+         else:
+            self.args += ['--%s' % pipes.quote(key)]
+
       self.process = None
-      ZMap.OUTFILE_NUM += 1
 
    def start(self):
       if self.is_started():
          return
 
-      args = ['zmap', "-p %d" % self.port, '-i eth0', "-o %s" % self.outfile, "2> %s" % self.errfile, '-d > /dev/null']
+      args = ['zmap'] + self.args + ["2> %s" % self.errfile, "> /dev/null"]
+
       print(" ".join(args))
 
       self.process = subprocess.Popen(" ".join(args), shell=True)
@@ -28,9 +105,6 @@ class ZMap(object):
 
       self.process.kill()
       self.process = None
-
-   def is_started(self):
-      return self.process is not None
 
    def report(self):
       if not self.is_started():
@@ -46,7 +120,7 @@ class ZMap(object):
 
       data = {}
 
-      match = re.search('([0-9:]+) ([0-9\.]+)% \(([0-9dhms]+) left\)', line)
+      match = re.search('([0-9:]+) ([0-9\.]+)%(?: \(([0-9dhms]+) left\))?', line)
       if match is None:
          print('Progress match: '+line)
          return None
@@ -83,11 +157,3 @@ class ZMap(object):
       ret['avg'] = match.group(3)
 
       return ret
-
-if __name__ == '__main__':
-   zmap = ZMap()
-
-   while True:
-      time.sleep(2)
-      print("Output:")
-      print(zmap.report())

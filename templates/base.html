@@ -1,22 +1,49 @@
 <!DOCTYPE html>
 <html>
    <head>
-      {% block head %}
       <title>{% block title %}{% endblock %} - ZMapper</title>
       <!-- JQuery -->
       <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
       <!-- Bootstrap -->
       <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-      <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
       <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
       <link href="{{ url_for('static', filename='zmapper.css') }}" rel='stylesheet' type='text/css'>
       <script src="{{ url_for('static', filename='zmapper.js') }}"></script>
+      {% block head %}
       {% endblock %}
    </head>
    <body>
-      {% block content %}
+      <nav class="navbar navbar-default navbar-static-top" role="navigation">
+         <div class="container">
+            <div class="navbar-header">
+               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#zmapper-navbar">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+               </button>
+               <a class="navbar-brand" href="/">ZMapper</a>
+            </div>
+            <div class="collapse navbar-collapse" id="zmapper-navbar">
+               <ul class="nav navbar-nav">
+                  <li><a href="/">Home</a></li>
+                  <li><a href="/jobs">Jobs</a></li>
+                  <li><a href="/results">Results</a></li>
+               </ul>
+               <ul class="nav navbar-nav navbar-right">
+                  <li><button class="btn btn-primary navbar-btn" data-toggle="modal" data-target=".new-job-modal">New Job</button></li>
+               </ul>
+            </div>
+         </div>
+      </nav>
+      <div id="content" class="container">
+         {% block content %}
+         {% endblock %}
+      </div>
+      {% block footer %}
       {% endblock %}
    </body>
+   {% include "new.html" %}
 </html>
