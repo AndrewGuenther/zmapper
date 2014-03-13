@@ -90,9 +90,6 @@ class ZMap(object):
       self.process = None
 
    def start(self):
-      if self.is_started():
-         return
-
       args = ['zmap'] + self.args + ["2> %s" % self.errfile, "> /dev/null"]
 
       print(" ".join(args))
@@ -107,9 +104,6 @@ class ZMap(object):
       self.process = None
 
    def report(self):
-      if not self.is_started():
-         return None
-
       line = subprocess.check_output("tail -n 1 %s" % self.errfile, shell=True)
 
       if line is None:
